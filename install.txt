@@ -1,0 +1,2 @@
+
+npm install express bcryptjs cookie-parser dotenv ejs jsonwebtoken mysql express-session
