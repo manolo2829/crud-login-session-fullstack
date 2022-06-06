@@ -16,7 +16,7 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/register', (req, res) => {
-    res.render('register')
+    res.render('register', {alert:false})
 })
 
 // router para los metodos del controller

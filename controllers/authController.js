@@ -10,13 +10,27 @@ exports.register = async(req, res) => {
         const name = req.body.name
         const user = req.body.user
         const pass = req.body.pass
-        // encriptamos la contraseña con el metodo hash
-        let passHash = await bcryptjs.hash(pass, 8)
-        // console.log(passHash)
-        conexion.query('INSERT INTO users SET ?', {user: user, name: name, pass:passHash}, (error, results) => {
-            if(error){console.log(error)}
-            res.redirect('/')
-        })
+        if(!name || !user || !pass){
+            res.render('register', {
+                alert:true,
+                alertTitle: 'Advertencia',
+                alertMessage: 'Complete los campos antes de enviar el formulario',
+                alertIcon: 'info',
+                showConfirmButton: true,
+                timer: false,
+                ruta: 'register'
+            })
+        }else{
+            // encriptamos la contraseña con el metodo hash
+            let passHash = await bcryptjs.hash(pass, 8)
+            // console.log(passHash)
+            conexion.query('INSERT INTO users SET ?', {user: user, name: name, pass:passHash}, (error, results) => {
+                if(error){console.log(error)}
+                res.redirect('/')
+            })
+
+        }
+        
     }catch (error) {
         console.log(error)
     }
