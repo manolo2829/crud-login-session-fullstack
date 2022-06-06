@@ -21,13 +21,30 @@ exports.register = async(req, res) => {
                 ruta: 'register'
             })
         }else{
-            // encriptamos la contraseña con el metodo hash
-            let passHash = await bcryptjs.hash(pass, 8)
-            // console.log(passHash)
-            conexion.query('INSERT INTO users SET ?', {user: user, name: name, pass:passHash}, (error, results) => {
-                if(error){console.log(error)}
-                res.redirect('/')
-            })
+            conexion.query('SELECT * FROM users WHERE user = ?', [user], async(error, results) => {
+                if(results.length !== 0){
+                    res.render('register', {
+                        alert:true,
+                        alertTitle: 'Ese nombre de usuario ya existe',
+                        alertMessage: 'Pruebe uno nuevo',
+                        alertIcon: 'error',
+                        showConfirmButton: true,
+                        timer: false,
+                        ruta: '/register'
+                    })
+                    console.log(error)
+                    console.log('ese usuario ya existe')
+                }else{
+                     // encriptamos la contraseña con el metodo hash
+                    let passHash = await bcryptjs.hash(pass, 8)
+                    // console.log(passHash)
+                    conexion.query('INSERT INTO users SET ?', {user: user, name: name, pass:passHash}, (error, results) => {
+                        if(error){console.log(error)}
+                        res.redirect('/')
+                    })
+                }
+            })            
+           
 
         }
         
